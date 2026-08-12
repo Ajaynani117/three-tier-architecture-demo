@@ -1,1 +1,6 @@
-ls .github/workflows
+name: Terraform Azure Infrastructure
+
+on:
+  push:
+    branches:
+      - master
