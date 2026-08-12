@@ -22,6 +22,8 @@ permissions:
 
 env:
   TF_WORKING_DIR: Azure/terraform
+  TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  TF_VAR_monitoring_email: ${{ secrets.MONITORING_EMAIL }}
 
   ARM_USE_OIDC: true
   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
