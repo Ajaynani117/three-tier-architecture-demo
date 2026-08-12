@@ -68,17 +68,22 @@ jobs:
 
       - name: Terraform Plan
         env:
-          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          TF_VAR_monitoring_email: ${{ secrets.MONITORING_EMAIL }}
+          SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          MONITORING_EMAIL: ${{ secrets.MONITORING_EMAIL }}
         run: |
-          if [ -z "$TF_VAR_subscription_id" ]; then
+          echo "Checking required Terraform variables..."
+
+          if [ -z "$SUBSCRIPTION_ID" ]; then
             echo "AZURE_SUBSCRIPTION_ID secret is missing"
             exit 1
           fi
 
-          if [ -z "$TF_VAR_monitoring_email" ]; then
+          if [ -z "$MONITORING_EMAIL" ]; then
             echo "MONITORING_EMAIL secret is missing"
             exit 1
           fi
 
-          terraform plan -input=false
+          terraform plan \
+            -input=false \
+            -var="subscription_id=$SUBSCRIPTION_ID" \
+            -var="monitoring_email=$MONITORING_EMAIL"
