@@ -3,3 +3,46 @@
 *-private.*
 vendor/
 Gopkg.lock
+.*.swp
+.DS_Store
+*-private.*
+vendor/
+Gopkg.lock
+
+# Terraform working directory
+**/.terraform/*
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Terraform plan files
+*.tfplan
+*.tfplans
+
+# Local Terraform variables
+terraform.tfvars
+*.auto.tfvars
+# Terraform working directory
+**/.terraform/*
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Terraform plan files
+*.tfplan
+*.tfplans
+
+# Local Terraform variables
+terraform.tfvars
+*.auto.tfvars
+*.tfvar
+# Terraform crash logs
+crash.log
+crash.*.log
+
+# Terraform crash logs
+crash.log
+crash.*.log
+
