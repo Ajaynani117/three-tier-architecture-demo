@@ -22,7 +22,6 @@ permissions:
 
 env:
   TF_WORKING_DIR: Azure/terraform
-
   ARM_USE_OIDC: true
   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
@@ -71,8 +70,6 @@ jobs:
           SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           MONITORING_EMAIL: ${{ secrets.MONITORING_EMAIL }}
         run: |
-          echo "Checking required Terraform variables..."
-
           if [ -z "$SUBSCRIPTION_ID" ]; then
             echo "AZURE_SUBSCRIPTION_ID secret is missing"
             exit 1
