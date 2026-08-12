@@ -70,17 +70,9 @@ jobs:
           SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           MONITORING_EMAIL: ${{ secrets.MONITORING_EMAIL }}
         run: |
-          if [ -z "$SUBSCRIPTION_ID" ]; then
-            echo "AZURE_SUBSCRIPTION_ID secret is missing"
-            exit 1
-          fi
+          echo "Using explicit Terraform variables"
 
-          if [ -z "$MONITORING_EMAIL" ]; then
-            echo "MONITORING_EMAIL secret is missing"
-            exit 1
-          fi
+          test -n "$SUBSCRIPTION_ID" || { echo "AZURE_SUBSCRIPTION_ID is missing"; exit 1; }
+          test -n "$MONITORING_EMAIL" || { echo "MONITORING_EMAIL is missing"; exit 1; }
 
-          terraform plan \
-            -input=false \
-            -var="subscription_id=$SUBSCRIPTION_ID" \
-            -var="monitoring_email=$MONITORING_EMAIL"
+          terraform plan -input=false -var="subscription_id=$SUBSCRIPTION_ID" -var="monitoring_email=$MONITORING_EMAIL"
