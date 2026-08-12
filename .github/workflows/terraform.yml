@@ -22,8 +22,6 @@ permissions:
 
 env:
   TF_WORKING_DIR: Azure/terraform
-  TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  TF_VAR_monitoring_email: ${{ secrets.MONITORING_EMAIL }}
 
   ARM_USE_OIDC: true
   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -69,4 +67,18 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan -input=false
+        env:
+          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_monitoring_email: ${{ secrets.MONITORING_EMAIL }}
+        run: |
+          if [ -z "$TF_VAR_subscription_id" ]; then
+            echo "AZURE_SUBSCRIPTION_ID secret is missing"
+            exit 1
+          fi
+
+          if [ -z "$TF_VAR_monitoring_email" ]; then
+            echo "MONITORING_EMAIL secret is missing"
+            exit 1
+          fi
+
+          terraform plan -input=false
