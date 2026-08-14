@@ -76,3 +76,56 @@ jobs:
           test -n "$MONITORING_EMAIL" || { echo "MONITORING_EMAIL is missing"; exit 1; }
 
           terraform plan -input=false -var="subscription_id=$SUBSCRIPTION_ID" -var="monitoring_email=$MONITORING_EMAIL"
+  apply:
+    name: Terraform Apply
+    needs: terraform
+    runs-on: ubuntu-latest
+
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+
+    environment:
+      name: production
+
+    defaults:
+      run:
+        working-directory: Azure/terraform
+
+    env:
+      ARM_USE_OIDC: true
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Azure Login using OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: |
+          terraform init \
+            -backend-config="resource_group_name=rg-terraform-state" \
+            -backend-config="storage_account_name=threetierdemo" \
+            -backend-config="container_name=tfstate" \
+            -backend-config="key=robotshop-dev.tfstate" \
+            -backend-config="use_oidc=true"
+
+      - name: Terraform Apply
+        env:
+          SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          MONITORING_EMAIL: ${{ secrets.MONITORING_EMAIL }}
+        run: |
+          terraform apply \
+            -input=false \
+            -auto-approve \
+            -var="subscription_id=$SUBSCRIPTION_ID" \
+            -var="monitoring_email=$MONITORING_EMAIL"
