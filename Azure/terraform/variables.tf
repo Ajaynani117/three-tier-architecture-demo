@@ -76,7 +76,7 @@ variable "application_gateway_capacity" {
 variable "aks_node_vm_size" {
   description = "VM size used by the AKS system node pool"
   type        = string
-  default     = "Standard_D2s_v5"
+  default     = "Standard_D4as_v7"
 }
 
 variable "aks_node_count" {
