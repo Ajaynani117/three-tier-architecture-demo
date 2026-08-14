@@ -46,7 +46,7 @@ variable "application_gateway_id" {
 variable "node_vm_size" {
   description = "VM size used by the system node pool"
   type        = string
-  default     = "Standard_D4s_v5"
+  default     = "Standard_D4as_v7"
 }
 
 variable "node_count" {
