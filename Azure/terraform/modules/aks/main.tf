@@ -34,9 +34,11 @@ resource "azurerm_kubernetes_cluster" "this" {
 
     only_critical_addons_enabled = true
 
-    upgrade_settings {
-      max_surge = "33%"
-    }
+   
+  upgrade_settings {
+    max_surge       = "0"
+    max_unavailable = "1"
+  }
 
     node_labels = {
       "nodepool-type" = "system"
