@@ -36,8 +36,7 @@ resource "azurerm_kubernetes_cluster" "this" {
 
    
   upgrade_settings {
-    max_surge       = "0"
-    max_unavailable = "1"
+    max_surge = "33%"
   }
 
     node_labels = {
